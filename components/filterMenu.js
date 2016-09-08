@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import FilterItems from './filterItems';
+import FilterItems from './filterMenuItems';
 
 const FilterMenu = ({ selectTab, filters }) => {
   return (
