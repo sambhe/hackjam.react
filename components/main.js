@@ -5,6 +5,8 @@ import BookList from './bookList';
 import SideBarFilters from './sideBarFilters';
 import FilterMenu from './filterMenu';
 
+import { connect } from 'react-redux'
+
 class Main extends Component {
   constructor () {
     super();
@@ -72,4 +74,4 @@ class Main extends Component {
   }
 }
 
-export default Main;
+export default connect()(Main);
