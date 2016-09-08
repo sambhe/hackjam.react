@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import filters from '../mocks/filters';
 import books from '../mocks/books';
-
+import BookList from './bookList';
+import SideBarFilters from './sideBarFilters';
+import FilterMenu from './filterMenu';
 
 class Main extends Component {
   constructor () {
@@ -13,10 +15,11 @@ class Main extends Component {
     this.state = {
       books,
       filters,
+      navClosed: true,
     };
   }
 
-  selectTab ( category ) {
+  selectTab (category) {
     this.setState({
       filters: filters.map(filter => {
         if (filter.category === category) {
@@ -34,13 +37,13 @@ class Main extends Component {
 
   closeSideBar () {
     this.setState({
-      navClosed: false
+      navClosed: true,
     });
   }
 
   openSideBar () {
     this.setState({
-      navClosed: true
+      navClosed: false,
     });
   }
 
@@ -49,53 +52,21 @@ class Main extends Component {
   }
 
   render () {
-    const { books, filters } = this.state;
-
-    const filterItems = this.state.filters.map(filter => {
-          return (<li key={ filter.category } onClick={ this.selectTab.bind(null, filter.category) } style={{display: 'inline-style'}}>
-            <a className={filter.selected? 'selected': ''} href="#0">{filter.category}</a>
-          </li>);
-    });
-
-
-    let className = 'gallery';
-
-    if ( this.state.navClosed ) {
-      className += ' filter-is-visible';
-    }
+    const { books, filters, navClosed } = this.state;
 
     return (
-    <main className="main-content">
-      <div className="tab-filter-wrapper">
-          <div className="tab-filter">
-            <ul>
-              <li className="placeholder">
-                <a data-type="all" href="#0">All</a>
-              </li>
-              {filterItems}
-            </ul>
-          </div>
-		    </div>
+     <main className="main-content">
 
-      <section className={ className }>
-      { this.state.books.map( book => <li key={ book.title }><img src={ book.cover }/></li>) }
-      </section>
+      <FilterMenu filters={ filters } selectTab={ this.selectTab }/>
 
-      <div className={ this.state.navClosed? 'filter filter-is-visible': 'filter' }>
-			  <form>
-				<div className="filter-block">
-					<h4>Search</h4>
+      <BookList books={ books } navClosed={ navClosed }/>
 
-					<div className="filter-content">
-						<input type="search" placeholder="title, price..." onChange={ this.onChange }/>
-					</div>
-				</div>
-
-        </form>
-        <a href="#0" className="close" onClick={ this.closeSideBar }>Close</a>
-      </div>
-
-      <a href="#0" className="filter-trigger" onClick={ this.openSideBar }>Filters</a>
+      <SideBarFilters
+        navClosed={ navClosed }
+        closeSideBar={ this.closeSideBar }
+        onChange={ this.search }
+        openSideBar={ this.openSideBar }
+      />
     </main>
    );
   }

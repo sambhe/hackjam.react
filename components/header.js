@@ -8,7 +8,6 @@ const Header = () => {
            <h1>Books by Hackages</h1>
         </div>
       </div>
-
     </header>
   );
 };
