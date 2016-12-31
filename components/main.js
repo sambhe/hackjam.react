@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import filters from '../mocks/filters';
 import books from '../mocks/books';
-
+import { uniqBy } from 'lodash';
 
 class Main extends Component {
+  selectedCategory = "all";
+
   constructor () {
     super();
     this.closeSideBar = this.closeSideBar.bind(this);
@@ -12,23 +13,15 @@ class Main extends Component {
     this.selectTab = this.selectTab.bind(this);
     this.state = {
       books,
-      filters,
+      filters: uniqBy(books.map(book => ({category: book.category})), 'category'),
     };
   }
 
   selectTab ( category ) {
+    this.selectedCategory = category.toLowerCase();
+
     this.setState({
-      filters: filters.map(filter => {
-        if (filter.category === category) {
-          filter.selected = true;
-        } else {
-          filter.selected = false;
-        }
-        return filter;
-      }),
-     books: category === 'All'? books : books.filter( book => {
-      return book.category === category;
-     }),
+      books: category === 'all'? books : books.filter( book => book.category.toLowerCase() === category.toLowerCase()),
     });
   }
 
@@ -53,7 +46,7 @@ class Main extends Component {
 
     const filterItems = this.state.filters.map(filter => {
           return (<li key={ filter.category } onClick={ this.selectTab.bind(null, filter.category) } style={{display: 'inline-style'}}>
-            <a className={filter.selected? 'selected': ''} href="#0">{filter.category}</a>
+            <a className={filter.category.toLowerCase() === this.selectedCategory.toLowerCase()? 'selected': ''} href="#0">{filter.category}</a>
           </li>);
     });
 
