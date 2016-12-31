@@ -16,6 +16,7 @@
   "author": "007@hackages.io",
   "license": "MIT",
   "dependencies": {
+    "classnames": "^2.2.5",
     "hackages": "0.0.8",
     "lodash": "^4.17.3",
     "react": "^15.0.2",

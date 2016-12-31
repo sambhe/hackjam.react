@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import books from '../mocks/books';
 import { uniqBy } from 'lodash';
+import classnames from 'classnames';
 
 class Main extends Component {
-  selectedCategory = "all";
+  selectedCategory = '';
 
   constructor () {
     super();
@@ -13,7 +14,7 @@ class Main extends Component {
     this.selectTab = this.selectTab.bind(this);
     this.state = {
       books,
-      filters: uniqBy(books.map(book => ({category: book.category})), 'category'),
+      categories: uniqBy(books.map(book => ({name: book.category})), 'name'),
     };
   }
 
@@ -21,7 +22,9 @@ class Main extends Component {
     this.selectedCategory = category.toLowerCase();
 
     this.setState({
-      books: category === 'all'? books : books.filter( book => book.category.toLowerCase() === category.toLowerCase()),
+      books: category === 'all'? books : books
+        .filter( book => book.category.toLowerCase()
+        .includes(category.toLowerCase())),
     });
   }
 
@@ -38,24 +41,43 @@ class Main extends Component {
   }
 
   search (input) {
-    console.log(input.target.value);
+    const term = input.target.value.toLowerCase();
+    this.setState({
+      books: term === ''? books : books.filter( book => {
+      return book.category.toLowerCase().includes(term) || 
+          book.title.toLowerCase().includes(term)
+      }),
+    });
   }
 
   render () {
-    const { books, filters } = this.state;
+    const { books, categories } = this.state;
 
-    const filterItems = this.state.filters.map(filter => {
-          return (<li key={ filter.category } onClick={ this.selectTab.bind(null, filter.category) } style={{display: 'inline-style'}}>
-            <a className={filter.category.toLowerCase() === this.selectedCategory.toLowerCase()? 'selected': ''} href="#0">{filter.category}</a>
-          </li>);
+    const filterItems = categories.map(category => {
+
+      const filterStyle = classnames({
+        'selected': category.name.toLowerCase() === this.selectedCategory.toLowerCase(),
+      });
+      const categoryName = category.name;
+
+      return (
+        <li key={ categoryName } onClick={ this.selectTab.bind(null, categoryName) } style={{display: 'inline-style'}}>
+        <a className={filterStyle} href="#0">{ categoryName }</a>
+        </li>
+      );
     });
 
 
-    let className = 'gallery';
+    const galleryStyle = classnames({
+      'gallery': true,
+      'filter-is-visible': this.state.navClosed,
+    });
 
-    if ( this.state.navClosed ) {
-      className += ' filter-is-visible';
-    }
+    const navbarStyle = classnames({
+      'filter': true,
+      'filter-is-visible': this.state.navClosed,
+    });
+
 
     return (
     <main className="main-content">
@@ -70,17 +92,17 @@ class Main extends Component {
           </div>
 		    </div>
 
-      <section className={ className }>
-      { this.state.books.map( book => <li key={ book.title }><img src={ book.cover }/></li>) }
+      <section className={ galleryStyle }>
+         { this.state.books.map( book => <li key={ book.title }><img src={ book.cover }/></li>) }
       </section>
 
-      <div className={ this.state.navClosed? 'filter filter-is-visible': 'filter' }>
+      <div className={ navbarStyle }>
 			  <form>
 				<div className="filter-block">
 					<h4>Search</h4>
 
 					<div className="filter-content">
-						<input type="search" placeholder="title, price..." onChange={ this.onChange }/>
+						<input type="search" placeholder="title, price..." onChange={ this.search }/>
 					</div>
 				</div>
 
