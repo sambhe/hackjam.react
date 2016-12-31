@@ -2,22 +2,20 @@ import React, { Component } from 'react';
 import books from '../mocks/books';
 import { uniqBy } from 'lodash';
 import classnames from 'classnames';
+import autobind from 'autobind';
 
 class Main extends Component {
   selectedCategory = '';
 
   constructor () {
     super();
-    this.closeSideBar = this.closeSideBar.bind(this);
-    this.openSideBar = this.openSideBar.bind(this);
-    this.search = this.search.bind(this);
-    this.selectTab = this.selectTab.bind(this);
     this.state = {
       books,
       categories: uniqBy(books.map(book => ({name: book.category})), 'name'),
     };
   }
 
+  @autobind
   selectTab ( category ) {
     this.selectedCategory = category.toLowerCase();
 
@@ -28,18 +26,21 @@ class Main extends Component {
     });
   }
 
+  @autobind
   closeSideBar () {
     this.setState({
       navClosed: false
     });
   }
 
+  @autobind
   openSideBar () {
     this.setState({
       navClosed: true
     });
   }
 
+  @autobind
   search (input) {
     const term = input.target.value.toLowerCase();
     this.setState({
