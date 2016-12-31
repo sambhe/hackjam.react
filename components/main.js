@@ -3,6 +3,7 @@ import books from '../mocks/books';
 import { uniqBy } from 'lodash';
 import classnames from 'classnames';
 import autobind from 'autobind';
+import FlipMove from 'react-flip-move';
 
 class Main extends Component {
   selectedCategory = '';
@@ -94,7 +95,9 @@ class Main extends Component {
 		    </div>
 
       <section className={ galleryStyle }>
-         { this.state.books.map( book => <li key={ book.title }><img src={ book.cover }/></li>) }
+        <FlipMove>
+            { this.state.books.map( book => <li key={ book.title }><img src={ book.cover }/></li>) }
+         </FlipMove>
       </section>
 
       <div className={ navbarStyle }>

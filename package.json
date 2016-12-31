@@ -20,7 +20,8 @@
     "classnames": "^2.2.5",
     "lodash": "^4.17.3",
     "react": "^15.0.2",
-    "react-dom": "^15.0.2"
+    "react-dom": "^15.0.2",
+    "react-flip-move": "^2.7.3"
   },
   "devDependencies": {
     "autoprefixer": "^6.6.0",
